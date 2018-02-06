@@ -170,7 +170,7 @@ try
     % Instructions
     instructions{1} = ['KEYBOARD HERO\nHit the corresponding keys on the keyboard when the coloured dot is crossing the horizontal line\n' colours{1} ' = left hand, ' colours{2} ' = right hand\nLeft hand keys: q,w,e,r\nRight hand keys: u,i,o,p\n(position your hands now and press any key to begin)'];
 
-    for t = 1:10
+    for t = 1:length(trialTypes)
         
         % Rest break?
         if (t == 1 || mod(t,120) == 0) && t ~= length(trialTypes)

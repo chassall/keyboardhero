@@ -9,6 +9,7 @@ rng('shuffle'); % Shuffle the random number generator
 %% Run flags
 justTesting = 0; % Testing
 usingMuse = 1;
+showFeedback = 1;
 
 %% OSC/Muse Variables
 % u = udp('localhost',5555); % specify the UDP address that markers will be sent to
@@ -40,7 +41,6 @@ keys(5) = KbName('u');
 keys(6) = KbName('i');
 keys(7) = KbName('o');
 keys(8) = KbName('p');
-
 
 % Cam's office (iMac)
 viewingDistance = 700; % mm, approximately MARGE
@@ -93,7 +93,7 @@ bgColour = [0 0 0];
 occludeColour = [0 0 0];
 textColour = [255 255 255];
 lineColour = [255 255 255];
-lineWidth = 3; % Pixels
+lineWidth = 6; % Pixels
 lineSpacingDeg = 2;
 lineSpacingMM = 2 * viewingDistance *tand(lineSpacingDeg/2);
 lineSpaceingPx = lineSpacingMM * horizontalPixelsPerMM;
@@ -115,7 +115,6 @@ trialsPerBin = 15; % Or, 50 to be able to look at interactions
 nTrials = trialsPerBin*32;
 trialTypes = repmat(1:32,1,trialsPerBin);
 trialTypes = Shuffle(trialTypes);
-showFeedback = 0;
 
 % Set hand colour cue based on participant number
 if mod(str2num(p_number),2)
@@ -168,7 +167,7 @@ try
     % KbPressWait();
     
     % Instructions
-    instructions{1} = ['KEYBOARD HERO\nHit the corresponding keys on the keyboard when the coloured dot is crossing the horizontal line\n' colours{1} ' = left hand, ' colours{2} ' = right hand\nLeft hand keys: q,w,e,r\nRight hand keys: u,i,o,p\n(position your hands now and press any key to begin)'];
+    instructions{1} = ['KEYBOARD HERO\nTap the corresponding keys on the keyboard as the coloured dot crosses the horizontal line\n' colours{1} ' = left hand, ' colours{2} ' = right hand\nLeft hand keys: q,w,e,r\nRight hand keys: u,i,o,p\nKeep your eyes on the ''+'' in the center of the display at all times\nThe ''+'' will turn cyan for correct key presses, red for incorrect key presses\n(position your hands now and press any key to begin)'];
 
     for t = 1:length(trialTypes)
         
@@ -525,17 +524,6 @@ try
                 throw(ME);
             end
             
-            % Draw win colour over top
-            if showFeedback
-                % winRect = xyRect(:,drawReward);
-                % Screen('FillOval',win,winColour,winRect);
-                if isCorrect == 1
-                    Screen('DrawLine', win, winColour, 0, gameHeight, horRes, gameHeight,lineWidth);
-                elseif isCorrect == -1
-                    Screen('DrawLine', win, loseColour, 0, gameHeight, horRes, gameHeight,lineWidth);
-                end
-            end
-            
             % If prep time is reduced, occlude top part
             if prepTime == 2
                 Screen('FillRect',win,occludeColour,[0,0,horRes,occludeHeight]);
@@ -550,7 +538,17 @@ try
             % Fixation cross
             Screen(win,'TextFont','Arial');
             Screen(win,'TextSize',64);
-            DrawFormattedText(win,'+','center',fixationHeight,textColour);
+            if showFeedback
+                if isCorrect == 1
+                    DrawFormattedText(win,'+','center',fixationHeight,winColour);
+                elseif isCorrect == -1
+                    DrawFormattedText(win,'+','center',fixationHeight,loseColour);    
+                else
+                    DrawFormattedText(win,'+','center',fixationHeight,textColour);
+                end
+            else
+                DrawFormattedText(win,'+','center',fixationHeight,textColour);
+            end
             
             Screen('Flip',win);
             

@@ -353,12 +353,12 @@ try
         % Set up dot parameters
         if side == 1
             %xs = lineLocs(1:numLines/2);
-            dotColour = [0 0 255];
+            dotColour = leftHandColour;
             xs = lineLocs;
             keysToCheck = keys(1:4);
         else
             %xs = lineLocs(numLines/2+1:end);
-            dotColour = [0 255 0];
+            dotColour = rightHandColour;
             xs = lineLocs;
             keysToCheck = keys(5:8);
         end
@@ -503,7 +503,7 @@ try
                 % Compare vertical location of dots, p, to vertical
                 % location of line (gameHeight)
                 % drawReward = xyRect(2,:) < gameHeight & xyRect(4,:) > gameHeight;
-                if all(keyCode(correctResponse))
+                if any(keyCode(correctResponse))
                     isCorrect = 1;
                 else
                     isCorrect = -1;
